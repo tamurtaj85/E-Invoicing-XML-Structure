@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "xmlbuilder": "^15.1.1"
+  },
+  "name": "e_invoicing",
+  "version": "1.0.0",
+  "main": "example1.js",
+  "devDependencies": {},
+  "type": "module",
+  "scripts": {
+    "start": "npm run example1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
