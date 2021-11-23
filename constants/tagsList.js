@@ -1,6 +1,12 @@
 // Tag generators (TG)
 const cacTG = (tagName) => `cac:${tagName}`;
 const cbcTG = (tagName) => `cbc:${tagName}`;
+const extTG = (tagName) => `ext:${tagName}`;
+const sigTG = (tagName) => `sig:${tagName}`;
+const sacTG = (tagName) => `sac:${tagName}`;
+const sbcTG = (tagName) => `sbc:${tagName}`;
+const dsTG = (tagName) => `ds:${tagName}`;
+const xadesTG = (tagName) => `xades:${tagName}`;
 
 // cac Tags
 export const CAC_TAGS = {
@@ -65,4 +71,58 @@ export const CBC_TAGS = {
   LINE_COUNT_NUMERIC: cbcTG("LineCountNumeric"),
   ACTUAL_DELIVERY_DATE: cbcTG("ActualDeliveryDate"),
   ALLOWANCE_TOTAL_AMOUNT: cbcTG("AllowanceTotalAmount"),
+};
+
+// EXT Tags
+export const EXT_TAGS = {
+  UBL_EXTENSIONS: extTG("UBLExtensions"),
+  UBL_EXTENSION: extTG("UBLExtension"),
+  EXTENSION_URI: extTG("ExtensionURI"),
+  EXTENSION_CONTENT: extTG("ExtensionContent"),
+};
+
+// UNI Tags
+export const SIG_TAG = {
+  UBL_DOC_SIG: sigTG("UBLDocumentSignatures"),
+};
+
+export const SAC_TAG = {
+  SIGNATURE_INFO: sacTG("SignatureInformation"),
+};
+
+export const SBC_TAG = {
+  REF_SIGNATURE_ID: sbcTG("ReferencedSignatureID"),
+};
+
+// DS Tags
+export const DS_TAGS = {
+  X_PATH: dsTG("XPath"),
+  OBJECT: dsTG("Object"),
+  KEY_INFO: dsTG("KeyInfo"),
+  REFERENCE: dsTG("Reference"),
+  SIGNATURE: dsTG("Signature"),
+  TRANSFORM: dsTG("Transform"),
+  X590_DATA: dsTG("X509Data"),
+  TRANSFORMS: dsTG("Transforms"),
+  SIGNED_INFO: dsTG("SignedInfo"),
+  DIGEST_VALUE: dsTG("DigestValue"),
+  DIGEST_METHOD: dsTG("DigestMethod"),
+  SIGNATURE_VALUE: dsTG("SignatureValue"),
+  SIGNATURE_METHOD: dsTG("SignatureMethod"),
+  X509_CERTIFICATE: dsTG("X509Certificate"),
+  X509_ISSUER_NAME: dsTG("X509IssuerName"),
+  X509_SERIAL_NUMBER: dsTG("X509SerialNumber"),
+  CANONICALIZATION_METHOD: dsTG("CanonicalizationMethod"),
+};
+
+// XADES Tags
+export const XADES_TAGS = {
+  QUALIFYING_PROPERTIES: xadesTG("QualifyingProperties"),
+  SIGNED_PROPERTIES: xadesTG("SignedProperties"),
+  SIGNED_SIGNATURE_PROPS: xadesTG("SignedSignatureProperties"),
+  SIGNING_TIME: xadesTG("SigningTime"),
+  SIGNING_CERTIFICATRE: xadesTG("SigningCertificate"),
+  CRET: xadesTG("Cert"),
+  CRET_DIGEST: xadesTG("CertDigest"),
+  ISSUER_SERIAL: xadesTG("IssuerSerial"),
 };

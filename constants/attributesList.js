@@ -5,7 +5,15 @@ export const ATT_KEY_LIST = {
   SCHEME_ID: "schemeID",
   MIME_CODE: "mimeCode",
   CURRENCY_ID: "currencyID",
+  XMLNS: "xmlns",
+  ID: "Id",
+  ALGO: "Algorithm",
+  URI: "URI",
+  TYPE: "Type",
+  TARGET: "Target",
 };
+
+export const xmlnsTG = (tagName) => `${ATT_KEY_LIST.XMLNS}:${tagName}`;
 
 // Attribute value list
 export const ATT_VAL_LIST = {

@@ -5,10 +5,14 @@ const {
   CBC_TAGS,
   ATT_KEY_LIST,
   ATT_VAL_LIST,
+  xmlnsTG,
   addNodesToParent,
   addSubChildToChild,
 } = utils;
 
+import fs from "fs";
+
+import { UBL_EXTENSION_COMPONENT } from "./modules/extentions.js";
 import DOCUMENT_HEADER from "./modules/documentHeader.js";
 import ADDITIONAL_DOCUMENT_REFERENCE from "./modules/additionalDocumnetRef.js";
 import SIGNATURE from "./modules/signature.js";
@@ -21,14 +25,39 @@ import TAX_CATEGORY from "./modules/taxCategory.js";
 import LEGAL_MONETARY_TOTAL from "./modules/legalMonetaryTotal.js";
 import INVOICE_LINE from "./modules/invoiceLine.js";
 
+import {
+  DS_UBL_EXT_COMPONENT,
+  ADR_DATA,
+  postalAddress,
+} from "./invoiceData.js";
+
 // // // // // // // // // // // // // //
 // Creating parent node
 // // // // // // // // // // // // // //
-const Invoice = builder.create("Invoice");
+const Invoice = builder
+  .create("Invoice")
+  .att(
+    ATT_KEY_LIST.XMLNS,
+    "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+  )
+  .att(
+    xmlnsTG("cac"),
+    "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+  )
+  .att(
+    xmlnsTG("cbc"),
+    "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+  )
+  .att(
+    xmlnsTG("ext"),
+    "urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+  );
 
 // // // // // // // // // // // // // //
 // Adding child node into parent
 // // // // // // // // // // // // // //
+
+addNodesToParent(Invoice, UBL_EXTENSION_COMPONENT({ ...DS_UBL_EXT_COMPONENT }));
 
 // Setting DOCUMENT_HEADER
 addNodesToParent(Invoice, DOCUMENT_HEADER.setProfileID());
@@ -40,32 +69,6 @@ addNodesToParent(Invoice, DOCUMENT_HEADER.setInvoiceTypeCode());
 addNodesToParent(Invoice, DOCUMENT_HEADER.setDocumentCurrencyCode());
 addNodesToParent(Invoice, DOCUMENT_HEADER.setTaxCurrencyCode());
 addNodesToParent(Invoice, DOCUMENT_HEADER.setLineCountNumeric());
-
-const ADR_DATA = [
-  [
-    ATT_VAL_LIST.ICV,
-    {
-      docType: "UUID",
-      docValue: 46531,
-    },
-  ],
-  [
-    ATT_VAL_LIST.PIH,
-    {
-      docType: "Attachment",
-      docValue:
-        "NWZlY2ViNjZmZmM4NmYzOGQ5NTI3ODZjNmQ2OTZjNzljMmRiYzIzOWRkNGU5MWI0NjcyOWQ3M2EyN2ZiNTdlOQ==",
-    },
-  ],
-  [
-    ATT_VAL_LIST.QR,
-    {
-      docType: "Attachment",
-      docValue:
-        "ARlBbCBTYWxhbSBTdXBwbGllcyBDby4gTFREAg8zMTAxNzUzOTc0MDAwMDMDFDIwMjEtMDQtMjVUMTU6MzA6MDBaBAcxMDM1LjAwBQYxMzUuMDAGLGo0K3dET2FSTFJRbjdvd2VvQ2JvYjFXRGFxUFJDVEh6b25uMDhiK2RKcjA9B4GwMzA1NjMwMTAwNjA3MmE4NjQ4Y2UzZDAyMDEwNjA1MmI4MTA0MDAwYTAzNDIwMDA0OTZlOGM0OTQwM2ZjMDk0NWM4ZjQwMjU4Y2RkMmQ5ZTkzMDFhNzkyMTJhOTNhN2M4ZmZhZDhlYzJkODE1YzI1ZjJjYjRkZDVmZTUzZmI4ZTdkMGI0YTAyNmZjYTQ1NzIzNTEzZDc3YzBlMzM4ZTkxNTE2OGU1MGQ1OTQwNGRiOTQIILDmL87RImpgalwSxEN7DVidfKQS9ffWYI5GIc7GyJdrCSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-    },
-  ],
-];
 
 // Setting ADDITIONAL_DOCUMENT_REFERENCE
 for (let i = 0; i < 3; i++)
@@ -83,29 +86,6 @@ addNodesToParent(
   )
 );
 
-const postalAddress = {
-  asp_PA: {
-    streetName: "King Abdulaziz Road",
-    buildingNumber: 8228,
-    plotID: 2121,
-    citySubDivName: "Al Amal",
-    cityName: "Riyadh",
-    postalZone: 12643,
-    countrySubEntity: "Riyadh Region",
-    countryIdCode: "SA",
-  },
-  acp_PA: {
-    streetName: "King Abdullah Road",
-    buildingNumber: 3709,
-    plotID: 1004,
-    citySubDivName: "Al Mursalat",
-    cityName: "Riyadh",
-    postalZone: 11564,
-    countrySubEntity: "Riyadh Region",
-    countryIdCode: "SA",
-  },
-};
-
 // Setting ACCOUNTING_PARTY (Supplier)
 const asp = ACCOUNTING_PARTY.setAccountingParty(
   CAC_TAGS.ACCOUNTING_SUPPLIER_PARTY
@@ -113,9 +93,6 @@ const asp = ACCOUNTING_PARTY.setAccountingParty(
 
 addNodesToParent(asp, ACCOUNTING_PARTY.setPartyID(ATT_VAL_LIST.MLS, 123457890));
 addNodesToParent(asp, ACCOUNTING_PARTY.setPostalAddress(postalAddress.asp_PA));
-// let pts = ACCOUNTING_PARTY.setPartTaxScheme(310175397400003);
-// addNodesToParent(asp, pts);
-// addNodesToParent(pts, TAX_SCHEME(ATT_VAL_LIST.VAT));
 addNodesToParent(
   asp,
   addSubChildToChild(
@@ -253,13 +230,16 @@ function addInvoiceLine() {
   addNodesToParent(Invoice, invoiceLine);
 }
 
-// function addMultipleChilds(childNode, childCount) {
-//   let node = "";
-
-//   for (let i = 0; i < childCount; i++) {
-//     node = builder.create(childNode);
-//     addNodesToParent(Invoice, node);
-//   }
-// }
+fs.writeFile(
+  "./TestStructures/tax_invoice_test3.xml",
+  fullInvoice,
+  function (error) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("The file was saved!");
+    }
+  }
+);
 
 console.log(fullInvoice);
